@@ -1,18 +1,125 @@
-<!DOCTYPE html>  
-<html lang="tr">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Benim Web Sitem</title>  
-</head>  
-<body>  
-    <h1>Hoş geldiniz!</h1>  
-    <p>Bu benim ilk GitHub Pages sitem.</p>  
-    
-    <nav>  
-        <ul>  
-            <li><a href="fonksiyon-oyunu.html">Fonksiyon Oyununa Git</a></li>  
-        </ul>  
-    </nav>  
-</body>  
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fonksiyon Hesaplayıcı - Çoklu Tablolar</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        table { margin: 20px auto; border-collapse: collapse; width: 80%; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #f4f4f4; }
+        input { width: 60px; padding: 5px; text-align: center; }
+        .dogru { background-color: #d4edda; }
+        .yanlis { background-color: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>Fonksiyon Hesaplayıcı</h1>
+    <p>Tablodaki boşluklara kendi cevaplarınızı yazın ve "Kontrol Et" butonuna tıklayın.</p>
+
+    <!-- İlk Tablo -->
+    <h2>Tablo 1</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Fonksiyon</th>
+                <th>x = -2</th>
+                <th>x = -1</th>
+                <th>x = 0</th>
+                <th>x = 1</th>
+                <th>x = 2</th>
+            </tr>
+        </thead>
+        <tbody id="tablo1"></tbody>
+    </table>
+
+    <!-- İkinci Tablo -->
+    <h2>Tablo 2</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Fonksiyon</th>
+                <th>x = -2</th>
+                <th>x = -1</th>
+                <th>x = 0</th>
+                <th>x = 1</th>
+                <th>x = 2</th>
+            </tr>
+        </thead>
+        <tbody id="tablo2"></tbody>
+    </table>
+
+    <button onclick="kontrolEt()">Kontrol Et</button>
+
+    <script>
+        const xDegerleri = [-2, -1, 0, 1, 2];
+
+        // İlk tablo fonksiyonları
+        const tablo1Fonksiyonlar = {
+            "f(x) = x": x => x,
+            "h(x) = 3x": x => 3 * x,
+            "k(x) = x / 2": x => x / 2,
+        };
+
+        // İkinci tablo fonksiyonları
+        const tablo2Fonksiyonlar = {
+            "m(x) = -2x": x => -2 * x,
+            "n(x) = -2x / 3": x => (-2 * x) / 3,
+            "p(x) = x²": x => x ** 2, // Yeni bir örnek: karesini alan fonksiyon
+        };
+
+        // Tabloları oluştur
+        function tabloyuOlustur(tabloId, fonksiyonlar) {
+            const tabloBody = document.getElementById(tabloId);
+            Object.keys(fonksiyonlar).forEach((fonksiyonAdi, index) => {
+                const satir = document.createElement("tr");
+                const hucreFonksiyon = document.createElement("td");
+                hucreFonksiyon.textContent = fonksiyonAdi;
+                satir.appendChild(hucreFonksiyon);
+
+                xDegerleri.forEach((x, i) => {
+                    const hucre = document.createElement("td");
+                    const input = document.createElement("input");
+                    input.type = "number";
+                    input.id = `${tabloId}_${index}_${i}`;
+                    hucre.appendChild(input);
+                    satir.appendChild(hucre);
+                });
+
+                tabloBody.appendChild(satir);
+            });
+        }
+
+        // İlk tabloyu oluştur
+        tabloyuOlustur("tablo1", tablo1Fonksiyonlar);
+        // İkinci tabloyu oluştur
+        tabloyuOlustur("tablo2", tablo2Fonksiyonlar);
+
+        // Kontrol et fonksiyonu
+        function kontrolEt() {
+            // İlk tabloyu kontrol et
+            kontrolFonksiyonlari("tablo1", tablo1Fonksiyonlar);
+            // İkinci tabloyu kontrol et
+            kontrolFonksiyonlari("tablo2", tablo2Fonksiyonlar);
+        }
+
+        // Belirli bir tabloyu kontrol et
+        function kontrolFonksiyonlari(tabloId, fonksiyonlar) {
+            Object.keys(fonksiyonlar).forEach((fonksiyonAdi, index) => {
+                const hesapla = fonksiyonlar[fonksiyonAdi];
+                xDegerleri.forEach((x, i) => {
+                    const input = document.getElementById(`${tabloId}_${index}_${i}`);
+                    const dogruCevap = hesapla(x);
+                    if (parseFloat(input.value) === dogruCevap) {
+                        input.classList.add("dogru");
+                        input.classList.remove("yanlis");
+                    } else {
+                        input.classList.add("yanlis");
+                        input.classList.remove("dogru");
+                        input.value = dogruCevap; // Yanlışsa doğru cevabı yaz
+                    }
+                });
+            });
+        }
+    </script>
+</body>
 </html>
